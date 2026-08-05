@@ -1,5 +1,8 @@
-#Buisness Sales Performance Analytics
-#Ophola Zenzi
-import pandas as pd
-import numpy as np
-import matplotlib.pyplot as plt
+# Business Sales Performance Analytics
+# Ophola Zenzi
+
+from sales_analysis import main
+
+
+if __name__ == "__main__":
+    main()
