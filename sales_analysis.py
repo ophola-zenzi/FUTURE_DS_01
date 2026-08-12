@@ -88,7 +88,7 @@ def create_charts(df: pd.DataFrame) -> dict[str, str]:
     plt.close()
 
     product_revenue = (
-        df.groupby("Product", as_index=False)["Revenue"]
+        df.groupby("Product", as_index=False)[["Revenue"]]
         .sum()
         .sort_values("Revenue", ascending=False)
         .head(8)
@@ -105,7 +105,7 @@ def create_charts(df: pd.DataFrame) -> dict[str, str]:
     plt.close()
 
     region_profit = (
-        df.groupby("Region", as_index=False)["Profit"]
+        df.groupby("Region", as_index=False)[["Profit"]]
         .sum()
         .sort_values("Profit", ascending=False)
     )
@@ -120,12 +120,12 @@ def create_charts(df: pd.DataFrame) -> dict[str, str]:
     plt.close()
 
     category_revenue = (
-        df.groupby("Category", as_index=False)["Revenue"]
+        df.groupby("Category", as_index=False)[["Revenue"]]
         .sum()
         .sort_values("Revenue", ascending=False)
     )
     plt.figure(figsize=(7, 4))
-    plt.pie(category_revenue["Revenue"], labels=category_revenue["Category"], autopct="%1.1f%%", startangle=90)
+    plt.pie(category_revenue["Revenue"], labels=category_revenue["Category"].tolist(), autopct="%1.1f%%", startangle=90)
     plt.title("Revenue by Category")
     plt.tight_layout()
     category_path = OUTPUT_DIR / "revenue_by_category.png"
@@ -150,20 +150,17 @@ def build_summary(df: pd.DataFrame) -> dict[str, object]:
     )
     best_month = monthly.loc[monthly["MonthlyRevenue"].idxmax()]
     product_revenue = (
-        df.groupby("Product", as_index=False)["Revenue"]
+        df.groupby("Product", as_index=False)[["Revenue"]]
         .sum()
         .sort_values("Revenue", ascending=False)
     )
     region_profit = (
-        df.groupby("Region", as_index=False)["Profit"]
+        df.groupby("Region", as_index=False)[["Profit"]]
         .sum()
         .sort_values("Profit", ascending=False)
     )
     category_revenue = (
-        df.groupby("Category", as_index=False)["Revenue"]
-        .sum()
-        .sort_values("Revenue", ascending=False)
-    )
+        df.groupby("Category", as_index=False)[["Revenue"]].sum().sort_values("Revenue", ascending=False))
 
     top_product = product_revenue.iloc[0]["Product"]
     top_region = region_profit.iloc[0]["Region"]
