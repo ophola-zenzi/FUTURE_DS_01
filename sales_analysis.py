@@ -179,114 +179,12 @@ def build_summary(df: pd.DataFrame) -> dict[str, object]:
     }
 
 
-def write_report(summary: dict[str, object], charts: dict[str, str]) -> None:
-    relative_charts = {key: Path(path).name for key, path in charts.items()}
-    report = f"""# Business Sales Performance Report
-
-## Executive Summary
-This sales analytics project highlights the strongest revenue drivers, profitable regions, and the most promising growth opportunities for a business team. The analysis uses a realistic sample sales dataset and is designed to be client-ready for internal presentations or portfolio submissions.
-
-## Key Metrics
-- Total Revenue: ${summary['total_revenue']:.2f}
-- Total Profit: ${summary['total_profit']:.2f}
-- Average Order Value: ${summary['avg_order_value']:.2f}
-- Best Month: {summary['best_month']}
-- Monthly Revenue Growth: {summary['monthly_growth']:.1f}%
-
-## Key Insights
-- The highest revenue product is **{summary['top_product']}**.
-- The most profitable region is **{summary['top_region']}**.
-- The strongest revenue category is **{summary['top_category']}**.
-- Revenue growth is trending positively, suggesting that the business should focus on scaling the top-performing products and regions.
-
-## Recommendations
-1. Increase stock and marketing attention for **{summary['top_product']}** because it is the biggest revenue driver.
-2. Expand sales efforts in **{summary['top_region']}** by increasing promotions, partnerships, and customer outreach.
-3. Prioritize the **{summary['top_category']}** category for cross-sell and upsell campaigns.
-4. Review pricing and campaign timing to maintain momentum during weaker months.
-
-## Visuals
-![Monthly Revenue Trend](outputs/{relative_charts['monthly']})
-
-![Top Revenue Products](outputs/{relative_charts['products']})
-
-![Profit by Region](outputs/{relative_charts['region']})
-
-![Revenue by Category](outputs/{relative_charts['category']})
-"""
-    REPORT_PATH.write_text(report, encoding="utf-8")
-
-
-def write_dashboard(summary: dict[str, object], charts: dict[str, str]) -> None:
-    relative_charts = {key: Path(path).name for key, path in charts.items()}
-    html = f"""<!DOCTYPE html>
-<html lang=\"en\">
-<head>
-  <meta charset=\"UTF-8\" />
-  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\" />
-  <title>Business Sales Performance Dashboard</title>
-  <style>
-    body {{ font-family: Arial, sans-serif; margin: 0; background: #f5f7fb; color: #233142; }}
-    .container {{ max-width: 1200px; margin: 0 auto; padding: 24px; }}
-    .header {{ background: linear-gradient(135deg, #1d4ed8, #2563eb); color: white; padding: 24px; border-radius: 12px; }}
-    .cards {{ display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; margin: 20px 0; }}
-    .card {{ background: white; padding: 16px; border-radius: 10px; box-shadow: 0 2px 6px rgba(0,0,0,0.08); }}
-    .grid {{ display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 20px; }}
-    img {{ width: 100%; border-radius: 8px; background: white; padding: 6px; }}
-    .section {{ background: white; padding: 16px; border-radius: 10px; box-shadow: 0 2px 6px rgba(0,0,0,0.08); }}
-  </style>
-</head>
-<body>
-  <div class=\"container\">
-    <div class=\"header\">
-      <h1>Business Sales Performance Dashboard</h1>
-      <p>Client-ready overview of revenue, profit, product performance, and regional opportunity.</p>
-    </div>
-
-    <div class=\"cards\">
-      <div class=\"card\"><h3>Total Revenue</h3><p>${summary['total_revenue']:.2f}</p></div>
-      <div class=\"card\"><h3>Total Profit</h3><p>${summary['total_profit']:.2f}</p></div>
-      <div class=\"card\"><h3>Top Product</h3><p>{summary['top_product']}</p></div>
-      <div class=\"card\"><h3>Top Region</h3><p>{summary['top_region']}</p></div>
-    </div>
-
-    <div class=\"section\">
-      <h2>Executive Summary</h2>
-      <p>The strongest growth potential comes from scaling the top-performing product and strengthening campaigns in the most profitable region. Revenue is trending upward, which supports a focused growth plan.</p>
-    </div>
-
-    <div class=\"grid\">
-      <div class=\"section\">
-        <h3>Monthly Revenue Trend</h3>
-        <img src=\"outputs/{relative_charts['monthly']}\" alt=\"Monthly revenue trend\" />
-      </div>
-      <div class=\"section\">
-        <h3>Top Revenue Products</h3>
-        <img src=\"outputs/{relative_charts['products']}\" alt=\"Top revenue products\" />
-      </div>
-      <div class=\"section\">
-        <h3>Profit by Region</h3>
-        <img src=\"outputs/{relative_charts['region']}\" alt=\"Profit by region\" />
-      </div>
-      <div class=\"section\">
-        <h3>Revenue by Category</h3>
-        <img src=\"outputs/{relative_charts['category']}\" alt=\"Revenue by category\" />
-      </div>
-    </div>
-  </div>
-</body>
-</html>
-"""
-    DASHBOARD_PATH.write_text(html, encoding="utf-8")
-
-
 def main() -> None:
     df = generate_sales_data()
     clean_df = clean_data(df)
     charts = create_charts(clean_df)
     summary = build_summary(clean_df)
-    write_report(summary, charts)
-    write_dashboard(summary, charts)
+    
     print("Sales analysis completed successfully.")
     print(f"Report: {REPORT_PATH}")
     print(f"Dashboard: {DASHBOARD_PATH}")
